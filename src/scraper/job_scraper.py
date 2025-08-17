@@ -1,6 +1,7 @@
 import time
 import requests 
 from config.settings import SCRAPING_DELAY, TIMEOUT, MAX_RETRIES
+from bs4 import BeautifulSoup
 
 class JobScraper:
     def __init__(self):
@@ -29,13 +30,14 @@ class JobScraper:
     def scrape_all_sites(self):  # Metodo para scrapear los sitios
         print("Iniciando Scraping de ofertas de empleo")
         test_sites = [
-            "https://httpbin.org/delay/1",
-            "https://httpbin.org/status/200"
+            "https://books.toscrape.com/"
         ]
         for site_url in test_sites:
             print(f"Scrapeando: {site_url}")
             response = self._make_request(site_url)
             if response:
+                soup = BeautifulSoup(response.text, 'html.parser')
+                print(f"Soup type: {type(soup)}, First 200 characters: {str(soup)[:200]}")
                 fake_jobs = [f"Trabajo desde {site_url}", f"Otro trabajo desde {site_url}"]
                 self.jobs_founds.extend(fake_jobs)
                 print(f"Encontrados {len(fake_jobs)} trabajos")
